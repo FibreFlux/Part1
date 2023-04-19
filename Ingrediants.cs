@@ -72,6 +72,12 @@ namespace ST10058057_PROG6221_PortfolioOfEvidencePart1
             return noOfSteps;
         }
 
-        
+        public void clear() {
+            Array.Clear(ingNameArr, 0, ingNameArr.Length);
+            Array.Clear(quantityArr, 0, quantityArr.Length);
+            Array.Clear(measurementArr, 0, measurementArr.Length);
+            Array.Clear(stepsArr, 0, stepsArr.Length);
+        }
+
     }
 }
