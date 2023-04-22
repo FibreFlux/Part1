@@ -10,21 +10,22 @@ using System.Threading.Tasks;
 namespace ST10058057_PROG6221_PortfolioOfEvidencePart1
 {
     internal class Ingrediants
-    { 
-        private string[] ingNameArr = new string[50];
-        private int[] quantityArr = new int[50];
-        private string[] measurementArr = new string[50];
-        private string[] stepsArr = new string[50];
+    {
+        public string recipe;
+        public string[] ingNameArr = new string[50];
+        public int[] quantityArr = new int[50];
+        public string[] measurementArr = new string[50];
+        public string[] stepsArr = new string[50];
+
         static void Main()
         {
-            new Ingrediants().run();
+            new Ingrediants().addRecipe();
         }
 
-        public void run() 
+        public void addRecipe() 
         {
             int ingCount = 0;
-            int stepIndex = 1;
-            string recipe;
+            int stepCount = 0;
             Console.WriteLine("Please enter the recipe that you would like to make");
             recipe = Console.ReadLine();
             Console.WriteLine("Please enter how much ingrediants for your recipe");
@@ -40,24 +41,13 @@ namespace ST10058057_PROG6221_PortfolioOfEvidencePart1
                 Console.WriteLine("Please enter the ingrediant's unit of measurement");
                 measurementArr[i] = Console.ReadLine();
                 ingCount++;
+            }
 
-            }
             Console.WriteLine("How many steps are required to make this recipe");
-            int stepCount = Convert.ToInt32(Console.ReadLine());
+            stepCount = Convert.ToInt32(Console.ReadLine());
             steps(stepCount);
-            Console.WriteLine("Recipe: {0}", recipe);
-            Console.WriteLine("Ingrediants:");
-            for(int i = 0; i < ingNameArr.Length; i++)
-            {
-                if (ingNameArr[i] != null)
-                    Console.WriteLine("Name: " + ingNameArr[i] + "\tQuantity: " + quantityArr[i] + " " + measurementArr[i]);
-                
-            }
-            Console.WriteLine();
-            Console.WriteLine("Steps:");
-            foreach (var steps in stepsArr)
-                if (steps != null)
-                    Console.WriteLine($"{stepIndex++}. " + steps);
+            displayRecipe();
+            new RecipeMenu();
         }
 
         public int steps(int noOfSteps)
@@ -72,11 +62,51 @@ namespace ST10058057_PROG6221_PortfolioOfEvidencePart1
             return noOfSteps;
         }
 
+        public void displayRecipe()
+        {
+            int stepIndex = 1;
+            
+            Console.WriteLine("Recipe: {0}", recipe + "\n");
+            Console.WriteLine("Ingrediants:");
+            for (int i = 0; i < ingNameArr.Length; i++)
+            {
+                if (ingNameArr[i] != null)
+                    Console.WriteLine("Name: " + ingNameArr[i] + "\tQuantity: " + quantityArr[i] + " " + measurementArr[i]);
+
+            }
+            
+            Console.WriteLine("\nSteps:");
+            foreach (var steps in stepsArr)
+                if (steps != null)
+                    Console.WriteLine($"{stepIndex++}. " + steps);
+            Console.WriteLine();
+
+        }
+
+        public void scaleQuantity() 
+        {
+        }
+
+        public void quantityReset() 
+        { 
+        }
         public void clear() {
-            Array.Clear(ingNameArr, 0, ingNameArr.Length);
-            Array.Clear(quantityArr, 0, quantityArr.Length);
-            Array.Clear(measurementArr, 0, measurementArr.Length);
-            Array.Clear(stepsArr, 0, stepsArr.Length);
+            Console.WriteLine("Are you sure you would like to clear this recipe Yes/No");
+            string clearAnswer = Console.ReadLine();
+            if (clearAnswer.Equals("Yes"))
+            {
+                Array.Clear(ingNameArr, 0, ingNameArr.Length);
+                Array.Clear(quantityArr, 0, quantityArr.Length);
+                Array.Clear(measurementArr, 0, measurementArr.Length);
+                Array.Clear(stepsArr, 0, stepsArr.Length);
+                Console.WriteLine("Recipe has been cleared!");
+                new RecipeMenu();
+
+            }
+            else if (clearAnswer.Equals("No")){
+                new RecipeMenu();
+            }
+            
         }
 
     }
