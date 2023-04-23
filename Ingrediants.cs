@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Security.Cryptography.X509Certificates;
@@ -9,23 +10,23 @@ using System.Threading.Tasks;
 
 namespace ST10058057_PROG6221_PortfolioOfEvidencePart1
 {
-    internal class Ingrediants
+    class Ingrediants
     {
-        public string recipe;
-        public string[] ingNameArr = new string[50];
-        public int[] quantityArr = new int[50];
-        public string[] measurementArr = new string[50];
-        public string[] stepsArr = new string[50];
-
+        public static string recipe;
+        public static string[] ingNameArr = new string[50];
+        public static double[] quantityArr = new double[50];
+        public static string[] measurementArr = new string[50];
+        public static string[] stepsArr = new string[50];
+        public static double[] originalQuantities = new double[50];
         static void Main()
         {
-            new Ingrediants().addRecipe();
+            AddRecipe();
         }
 
-        public void addRecipe() 
+        public static void AddRecipe() 
         {
             int ingCount = 0;
-            int stepCount = 0;
+            int stepCount;
             Console.WriteLine("Please enter the recipe that you would like to make");
             recipe = Console.ReadLine();
             Console.WriteLine("Please enter how much ingrediants for your recipe");
@@ -36,7 +37,8 @@ namespace ST10058057_PROG6221_PortfolioOfEvidencePart1
                 ingNameArr[i] = Console.ReadLine();
 
                 Console.WriteLine("Please enter how much " + ingNameArr[i] + " you need to add to the recipe");
-                quantityArr[i] = Convert.ToInt32(Console.ReadLine());
+                quantityArr[i] = Convert.ToDouble(Console.ReadLine());
+                originalQuantities[i] = quantityArr[i];
 
                 Console.WriteLine("Please enter the ingrediant's unit of measurement");
                 measurementArr[i] = Console.ReadLine();
@@ -45,12 +47,12 @@ namespace ST10058057_PROG6221_PortfolioOfEvidencePart1
 
             Console.WriteLine("How many steps are required to make this recipe");
             stepCount = Convert.ToInt32(Console.ReadLine());
-            steps(stepCount);
-            displayRecipe();
+            Steps(stepCount);
+            DisplayRecipe();
             new RecipeMenu();
         }
 
-        public int steps(int noOfSteps)
+        public static int Steps(int noOfSteps)
         {
             
             for (int i = 0; i < noOfSteps; i++)
@@ -62,7 +64,7 @@ namespace ST10058057_PROG6221_PortfolioOfEvidencePart1
             return noOfSteps;
         }
 
-        public void displayRecipe()
+        public static void DisplayRecipe()
         {
             int stepIndex = 1;
             
@@ -83,14 +85,75 @@ namespace ST10058057_PROG6221_PortfolioOfEvidencePart1
 
         }
 
-        public void scaleQuantity() 
+        public static void ScaleQuantity() 
         {
+            int leftover;
+            Console.WriteLine("Would you like to scale your recipe by 0.5, 2 or 3?");
+            double scale = Convert.ToDouble(Console.ReadLine());
+            switch (scale)
+            {
+                case 0.5:
+                    for (int i = 0; i < quantityArr.Length; i++) { 
+                        quantityArr[i] *= scale;
+                        if (quantityArr[i] % 16 == 0 && measurementArr[i].Equals("tablespoons"))
+                        {
+                            quantityArr[i] = quantityArr[i] / 16;
+                            measurementArr[i] = "cups";
+                        }
+                        else if (quantityArr[i] % 16 > 0 && measurementArr[i].Equals("tablespoons"))
+                        {
+                            leftover = (int) quantityArr[i] % 16;
+                            quantityArr[i] = (int) quantityArr[i] / 16;
+                            measurementArr[i] = "cups and" + leftover + "tablespoons";
+                        }
+                    }
+                    break;
+                case 2:
+                    for (int j = 0; j < quantityArr.Length; j++)
+                    {
+                        quantityArr[j] *= scale;
+                        if (quantityArr[j] % 16 == 0 && measurementArr[j].Equals("tablespoons"))
+                        {
+                            quantityArr[j] = quantityArr[j] / 16;
+                            measurementArr[j] = "cups";
+                        }
+                        else if (quantityArr[j] % 16 > 0 && measurementArr[j].Equals("tablespoons"))
+                        {
+                            leftover = (int)quantityArr[j] % 16;
+                            quantityArr[j] = (int)quantityArr[j] / 16;
+                            measurementArr[j] = "cups and" + leftover + "tablespoons";
+                        }
+                    }
+                    break;
+                case 3:
+                    for (int k = 0; k < quantityArr.Length; k++)
+                        quantityArr[k] *= scale;
+                    break;
+            }
+            DisplayRecipe();
         }
 
-        public void quantityReset() 
-        { 
+        public static void QuantityReset()
+        {
+            Console.WriteLine("Would you like to reset your quantities to their original values Yes/No");
+            string reset = Console.ReadLine();
+            if (reset.Equals("Yes"))
+            {
+                for (int i = 0; i < quantityArr.Length; i++)
+                {
+                    quantityArr[i] = originalQuantities[i];
+                }
+                DisplayRecipe();
+
+            }
+            else if (reset.Equals("No"))
+            {
+                new RecipeMenu();
+            }
+
         }
-        public void clear() {
+
+        public static void ClearRecipe() {
             Console.WriteLine("Are you sure you would like to clear this recipe Yes/No");
             string clearAnswer = Console.ReadLine();
             if (clearAnswer.Equals("Yes"))
@@ -101,13 +164,59 @@ namespace ST10058057_PROG6221_PortfolioOfEvidencePart1
                 Array.Clear(stepsArr, 0, stepsArr.Length);
                 Console.WriteLine("Recipe has been cleared!");
                 new RecipeMenu();
-
             }
             else if (clearAnswer.Equals("No")){
                 new RecipeMenu();
             }
+
             
         }
+
+    }
+    class RecipeMenu
+    {
+        public RecipeMenu()
+        {
+            string option = "";
+            int selectedOption;
+
+            while (String.IsNullOrEmpty(option))
+            {
+                try
+                {
+                    Console.WriteLine("Please select one of the following options: \n1. " +
+                    "Increase quantity scale \n2. Clear recipe list \n3. Quantity Reset \n4. Exit Application");
+                    selectedOption = Convert.ToInt32(Console.ReadLine());
+                    switch (selectedOption)
+                    {
+                        case 1:
+                            Ingrediants.ScaleQuantity();
+                            new RecipeMenu();
+                            break;
+                        case 2:
+                            Ingrediants.ClearRecipe();
+                            new RecipeMenu();
+                            break;
+                        case 3:
+                            Ingrediants.QuantityReset();
+                            new RecipeMenu();
+                            break;
+                        case 4:
+                            Environment.Exit(0);
+                            break;
+                        default:
+                            Console.WriteLine("Invalid input, please try again.");
+                            break;
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                }
+
+            }
+        }
+
 
     }
 }
