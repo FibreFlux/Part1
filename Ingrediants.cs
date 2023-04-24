@@ -48,6 +48,7 @@ namespace ST10058057_PROG6221_PortfolioOfEvidencePart1
             Console.WriteLine("How many steps are required to make this recipe");
             stepCount = Convert.ToInt32(Console.ReadLine());
             Steps(stepCount);
+            RecipeConversion();
             DisplayRecipe();
             new RecipeMenu();
         }
@@ -67,7 +68,6 @@ namespace ST10058057_PROG6221_PortfolioOfEvidencePart1
         public static void DisplayRecipe()
         {
             int stepIndex = 1;
-            
             Console.WriteLine("Recipe: {0}", recipe + "\n");
             Console.WriteLine("Ingrediants:");
             for (int i = 0; i < ingNameArr.Length; i++)
@@ -87,50 +87,69 @@ namespace ST10058057_PROG6221_PortfolioOfEvidencePart1
 
         public static void ScaleQuantity() 
         {
-            int leftover;
-            Console.WriteLine("Would you like to scale your recipe by 0.5, 2 or 3?");
+            Console.WriteLine("Would you like to scale your recipe by 0.5, 2 or 3");
             double scale = Convert.ToDouble(Console.ReadLine());
             switch (scale)
             {
                 case 0.5:
-                    for (int i = 0; i < quantityArr.Length; i++) { 
+                    for (int i = 0; i < quantityArr.Length; i++)
                         quantityArr[i] *= scale;
-                        if (quantityArr[i] % 16 == 0 && measurementArr[i].Equals("tablespoons"))
-                        {
-                            quantityArr[i] = quantityArr[i] / 16;
-                            measurementArr[i] = "cups";
-                        }
-                        else if (quantityArr[i] % 16 > 0 && measurementArr[i].Equals("tablespoons"))
-                        {
-                            leftover = (int) quantityArr[i] % 16;
-                            quantityArr[i] = (int) quantityArr[i] / 16;
-                            measurementArr[i] = "cups and" + leftover + "tablespoons";
-                        }
-                    }
                     break;
                 case 2:
-                    for (int j = 0; j < quantityArr.Length; j++)
+                    for (int i = 0; i < quantityArr.Length; i++)
+                        quantityArr[i] *= scale;
+                    break;
+                case 3:
+                    for (int i = 0; i < quantityArr.Length; i++)
+                        quantityArr[i] *= scale;
+                    break;
+                default:
+                    Console.WriteLine("Scaling option not avaliable");
+                    break;
+            }
+            RecipeConversion();
+            DisplayRecipe();
+        }
+
+        public static void RecipeConversion()
+        {
+            int remainder;
+
+            for (int j = 0; j < quantityArr.Length; j++)
+            {
+                if (measurementArr[j] != null)
+                {
+                    if (measurementArr[j].Equals("tablespoons"))
                     {
-                        quantityArr[j] *= scale;
-                        if (quantityArr[j] % 16 == 0 && measurementArr[j].Equals("tablespoons"))
+                        remainder = (int)quantityArr[j] % 16;
+                        if (quantityArr[j] >= 16 && remainder == 0)
                         {
                             quantityArr[j] = quantityArr[j] / 16;
                             measurementArr[j] = "cups";
                         }
-                        else if (quantityArr[j] % 16 > 0 && measurementArr[j].Equals("tablespoons"))
+                        else if (quantityArr[j] >= 16 && remainder > 0)
                         {
-                            leftover = (int)quantityArr[j] % 16;
                             quantityArr[j] = (int)quantityArr[j] / 16;
-                            measurementArr[j] = "cups and" + leftover + "tablespoons";
+                            measurementArr[j] = "cups and " + remainder + " tablespoons";
                         }
                     }
-                    break;
-                case 3:
-                    for (int k = 0; k < quantityArr.Length; k++)
-                        quantityArr[k] *= scale;
-                    break;
+
+                    else if (measurementArr[j].Equals("teaspoons")) 
+                    {
+                         remainder = (int)quantityArr[j] % 3;
+                         if (quantityArr[j] >= 3 && remainder == 0)
+                         {
+                            quantityArr[j] = quantityArr[j] / 3;
+                            measurementArr[j] = "cups";
+                         }
+                         else if (quantityArr[j] >= 3 && remainder > 0)
+                         {
+                            quantityArr[j] = (int)quantityArr[j] / 3;
+                            measurementArr[j] = "tablespoons and " + remainder + " teaspoons";
+                         }
+                    }
+                }
             }
-            DisplayRecipe();
         }
 
         public static void QuantityReset()
@@ -151,6 +170,7 @@ namespace ST10058057_PROG6221_PortfolioOfEvidencePart1
                 new RecipeMenu();
             }
 
+
         }
 
         public static void ClearRecipe() {
@@ -158,6 +178,7 @@ namespace ST10058057_PROG6221_PortfolioOfEvidencePart1
             string clearAnswer = Console.ReadLine();
             if (clearAnswer.Equals("Yes"))
             {
+                recipe = "";
                 Array.Clear(ingNameArr, 0, ingNameArr.Length);
                 Array.Clear(quantityArr, 0, quantityArr.Length);
                 Array.Clear(measurementArr, 0, measurementArr.Length);
@@ -202,6 +223,7 @@ namespace ST10058057_PROG6221_PortfolioOfEvidencePart1
                             new RecipeMenu();
                             break;
                         case 4:
+                            Console.WriteLine("Goodbye");
                             Environment.Exit(0);
                             break;
                         default:
