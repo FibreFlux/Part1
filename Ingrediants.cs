@@ -25,6 +25,7 @@ namespace ST10058057_PROG6221_PortfolioOfEvidencePart1
 
         public static void AddRecipe() 
         {
+            Console.ForegroundColor = ConsoleColor.Green;
             int ingCount = 0;
             int stepCount;
             Console.WriteLine("Please enter the recipe that you would like to make");
@@ -67,6 +68,7 @@ namespace ST10058057_PROG6221_PortfolioOfEvidencePart1
 
         public static void DisplayRecipe()
         {
+            Console.ForegroundColor = ConsoleColor.Cyan;
             int stepIndex = 1;
             Console.WriteLine("Recipe: {0}", recipe + "\n");
             Console.WriteLine("Ingrediants:");
@@ -87,6 +89,7 @@ namespace ST10058057_PROG6221_PortfolioOfEvidencePart1
 
         public static void ScaleQuantity() 
         {
+            Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("Would you like to scale your recipe by 0.5, 2 or 3");
             double scale = Convert.ToDouble(Console.ReadLine());
             switch (scale)
@@ -140,7 +143,7 @@ namespace ST10058057_PROG6221_PortfolioOfEvidencePart1
                          if (quantityArr[j] >= 3 && remainder == 0)
                          {
                             quantityArr[j] = quantityArr[j] / 3;
-                            measurementArr[j] = "cups";
+                            measurementArr[j] = "tablespoons";
                          }
                          else if (quantityArr[j] >= 3 && remainder > 0)
                          {
@@ -154,6 +157,7 @@ namespace ST10058057_PROG6221_PortfolioOfEvidencePart1
 
         public static void QuantityReset()
         {
+            Console.ForegroundColor = ConsoleColor.Blue;
             Console.WriteLine("Would you like to reset your quantities to their original values Yes/No");
             string reset = Console.ReadLine();
             if (reset.Equals("Yes"))
@@ -174,6 +178,7 @@ namespace ST10058057_PROG6221_PortfolioOfEvidencePart1
         }
 
         public static void ClearRecipe() {
+            Console.ForegroundColor = ConsoleColor.Magenta;
             Console.WriteLine("Are you sure you would like to clear this recipe Yes/No");
             string clearAnswer = Console.ReadLine();
             if (clearAnswer.Equals("Yes"))
