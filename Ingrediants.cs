@@ -20,8 +20,9 @@ namespace ST10058057_PROG6221_PortfolioOfEvidencePart1
         public static void AddRecipe()
         {
             Console.ForegroundColor = ConsoleColor.Green;
-            int ingCount = 0;
             int stepCount;
+            bool correctCredentials = false;
+
             Console.WriteLine("Please enter the recipe that you would like to make");
             recipe = Console.ReadLine();
 
@@ -36,29 +37,41 @@ namespace ST10058057_PROG6221_PortfolioOfEvidencePart1
                 quantityArr[i] = Convert.ToDouble(Console.ReadLine());
                 originalQuantities[i] = quantityArr[i];
 
-                Console.WriteLine("Please select one of the 3 units of measurement \n1. teaspoons\n2. tablespoons\n3. cups");
-                int measurementChoice = Convert.ToInt32(Console.ReadLine());
-                switch (measurementChoice)
+                while (correctCredentials == false)
                 {
-                    case 1:
-                        measurementArr[i] = "teaspoons";
-                        originalMeasurements[i] = measurementArr[i];
-                        break;
-                    case 2:
-                        measurementArr[i] = "tablespoons";
-                        originalMeasurements[i] = measurementArr[i];
-                        break;
-                    case 3:
-                        measurementArr[i] = "cups";
-                        originalMeasurements[i] = measurementArr[i];
-                        break;
-                    default:
-                        Console.WriteLine("I'm sorry, but the option you have selected is not avaliable, please select a valid option");
-                        break;
+                    try
+                    {
+                        Console.WriteLine("Please select one of the 3 units of measurement \n1. teaspoons\n2. tablespoons\n3. cups");
+                        int measurementChoice = Convert.ToInt32(Console.ReadLine());
+                        switch (measurementChoice)
+                        {
+                            case 1:
+                                measurementArr[i] = "teaspoons";
+                                originalMeasurements[i] = measurementArr[i];
+                                correctCredentials = true;
+                                break;
+                            case 2:
+                                measurementArr[i] = "tablespoons";
+                                originalMeasurements[i] = measurementArr[i];
+                                correctCredentials = true;
+                                break;
+                            case 3:
+                                measurementArr[i] = "cups";
+                                originalMeasurements[i] = measurementArr[i];
+                                correctCredentials = true;
+                                break;
+                            default:
+                                Console.WriteLine("I'm sorry, but the option you have selected is not avaliable, please select a valid option");
+                                break;
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e.Message);
+                    }
                 }
-
-                ingCount++;
             }
+
             Console.WriteLine("How many steps are required to make this recipe");
             stepCount = Convert.ToInt32(Console.ReadLine());
             Steps(stepCount);
@@ -99,29 +112,31 @@ namespace ST10058057_PROG6221_PortfolioOfEvidencePart1
 
         public static void ScaleQuantity()
         {
-            string scaleOption = "";
+            bool validScaleOption = false;
             double scale;
             Console.ForegroundColor = ConsoleColor.Yellow;
-            while (String.IsNullOrEmpty(scaleOption))
+            while (validScaleOption == false)
             {
                 try
                 {
                     Console.WriteLine("Would you like to scale your recipe by 0.5, 2 or 3");
                     scale = Convert.ToDouble(Console.ReadLine());
-                    scaleOption = "" + scale;
                     switch (scale)
                     {
                         case 0.5:
                             for (int i = 0; i < quantityArr.Length; i++)
                                 quantityArr[i] *= scale;
+                            validScaleOption = true;
                             break;
                         case 2:
                             for (int i = 0; i < quantityArr.Length; i++)
                                 quantityArr[i] *= scale;
+                            validScaleOption = true;
                             break;
                         case 3:
                             for (int i = 0; i < quantityArr.Length; i++)
                                 quantityArr[i] *= scale;
+                            validScaleOption = true;
                             break;
                         default:
                             Console.WriteLine("Scaling option not avaliable, please select a valid option");
