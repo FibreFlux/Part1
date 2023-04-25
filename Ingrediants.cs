@@ -48,12 +48,15 @@ namespace ST10058057_PROG6221_PortfolioOfEvidencePart1
                 switch (measurementChoice) {
                     case 1:
                         measurementArr[i] = "teaspoons";
+                        originalMeasurements[i] = measurementArr[i];
                         break;
                     case 2:
                         measurementArr[i] = "tablespoons";
+                        originalMeasurements[i] = measurementArr[i];
                         break;
                     case 3:
                         measurementArr[i] = "cups";
+                        originalMeasurements[i] = measurementArr[i];
                         break;
                     default:
                         Console.WriteLine("I'm sorry, but the option you have selected is not avaliable, please select a valid option");
@@ -66,7 +69,6 @@ namespace ST10058057_PROG6221_PortfolioOfEvidencePart1
             Console.WriteLine("How many steps are required to make this recipe");
             stepCount = Convert.ToInt32(Console.ReadLine());
             Steps(stepCount);
-            RecipeConversion();
             DisplayRecipe();
             new RecipeMenu();
         }
@@ -134,7 +136,6 @@ namespace ST10058057_PROG6221_PortfolioOfEvidencePart1
         public static void RecipeConversion()
         {
             int remainder;
-
             for (int j = 0; j < quantityArr.Length; j++)
             {
                 if (measurementArr[j] != null)
@@ -182,6 +183,7 @@ namespace ST10058057_PROG6221_PortfolioOfEvidencePart1
                 for (int i = 0; i < quantityArr.Length; i++)
                 {
                     quantityArr[i] = originalQuantities[i];
+                    measurementArr[i] = originalMeasurements[i];
                 }
                 DisplayRecipe();
 
@@ -190,8 +192,6 @@ namespace ST10058057_PROG6221_PortfolioOfEvidencePart1
             {
                 new RecipeMenu();
             }
-
-
         }
 
         public static void ClearRecipe() {
@@ -211,10 +211,7 @@ namespace ST10058057_PROG6221_PortfolioOfEvidencePart1
             else if (clearAnswer.Equals("No")){
                 new RecipeMenu();
             }
-
-            
         }
-
     }
     class RecipeMenu
     {
