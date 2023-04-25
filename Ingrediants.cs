@@ -18,6 +18,7 @@ namespace ST10058057_PROG6221_PortfolioOfEvidencePart1
         public static string[] measurementArr = new string[50];
         public static string[] stepsArr = new string[50];
         public static double[] originalQuantities = new double[50];
+        public static string[] originalMeasurements = new string[50];
         static void Main()
         {
             AddRecipe();
@@ -30,7 +31,8 @@ namespace ST10058057_PROG6221_PortfolioOfEvidencePart1
             int stepCount;
             Console.WriteLine("Please enter the recipe that you would like to make");
             recipe = Console.ReadLine();
-            Console.WriteLine("Please enter how much ingrediants for your recipe");
+
+            Console.WriteLine("Please enter how much ingrediants required for your recipe");
             int noOfIngrediants = Convert.ToInt32(Console.ReadLine());
             for (int i = 0; i < noOfIngrediants; i++)
             {
@@ -41,8 +43,23 @@ namespace ST10058057_PROG6221_PortfolioOfEvidencePart1
                 quantityArr[i] = Convert.ToDouble(Console.ReadLine());
                 originalQuantities[i] = quantityArr[i];
 
-                Console.WriteLine("Please enter the ingrediant's unit of measurement");
-                measurementArr[i] = Console.ReadLine();
+                Console.WriteLine("Please select one of the 3 units of measurement \n1. teaspoons\n2. tablespoons\n3. cups");
+                int measurementChoice = Convert.ToInt32(Console.ReadLine());
+                switch (measurementChoice) {
+                    case 1:
+                        measurementArr[i] = "teaspoons";
+                        break;
+                    case 2:
+                        measurementArr[i] = "tablespoons";
+                        break;
+                    case 3:
+                        measurementArr[i] = "cups";
+                        break;
+                    default:
+                        Console.WriteLine("I'm sorry, but the option you have selected is not avaliable, please select a valid option");
+                        break;
+                }
+
                 ingCount++;
             }
 
@@ -107,7 +124,7 @@ namespace ST10058057_PROG6221_PortfolioOfEvidencePart1
                         quantityArr[i] *= scale;
                     break;
                 default:
-                    Console.WriteLine("Scaling option not avaliable");
+                    Console.WriteLine("Scaling option not avaliable, please select a valid option");
                     break;
             }
             RecipeConversion();
@@ -205,7 +222,7 @@ namespace ST10058057_PROG6221_PortfolioOfEvidencePart1
         {
             string option = "";
             int selectedOption;
-
+            Console.ForegroundColor = ConsoleColor.Red;
             while (String.IsNullOrEmpty(option))
             {
                 try
@@ -213,6 +230,7 @@ namespace ST10058057_PROG6221_PortfolioOfEvidencePart1
                     Console.WriteLine("Please select one of the following options: \n1. " +
                     "Increase quantity scale \n2. Clear recipe list \n3. Quantity Reset \n4. Exit Application");
                     selectedOption = Convert.ToInt32(Console.ReadLine());
+                    option = "" + selectedOption;
                     switch (selectedOption)
                     {
                         case 1:
