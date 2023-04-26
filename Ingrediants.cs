@@ -1,17 +1,21 @@
 ﻿using System;
+using System.Diagnostics.Contracts;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+using System.Runtime.InteropServices.WindowsRuntime;
+using System.Xml.Serialization;
 
 namespace ST10058057_PROG6221_PortfolioOfEvidencePart1
 {
     class Ingrediants
     {
-        public static string recipe;
-        public static string[] ingNameArr = new string[50];
+        public static string[] ingrediantNameArr = new string[50];
         public static double[] quantityArr = new double[50];
         public static string[] measurementArr = new string[50];
         public static string[] stepsArr = new string[50];
         public static double[] originalQuantities = new double[50];
         public static string[] originalMeasurements = new string[50];
-        public static int scaleCounter = 0;
+        public static bool correctCredentials = false;
         static void Main()
         {
             AddRecipe();
@@ -19,29 +23,52 @@ namespace ST10058057_PROG6221_PortfolioOfEvidencePart1
 
         public static void AddRecipe()
         {
-            Console.ForegroundColor = ConsoleColor.Green;
-            int stepCount;
-            bool correctCredentials = false;
-
-            Console.WriteLine("Please enter the recipe that you would like to make");
-            recipe = Console.ReadLine();
-
-            Console.WriteLine("Please enter how much ingrediants required for your recipe");
-            int noOfIngrediants = Convert.ToInt32(Console.ReadLine());
-            for (int i = 0; i < noOfIngrediants; i++)
+            string quantity = "";
+            string noOfIngrediants = "";
+            int ingrediantCount = 0;
+            while (correctCredentials == false)
             {
-                Console.WriteLine("Please enter the name of the ingrediant");
-                ingNameArr[i] = Console.ReadLine();
 
-                Console.WriteLine("Please enter how much " + ingNameArr[i] + " you need to add to the recipe");
-                quantityArr[i] = Convert.ToDouble(Console.ReadLine());
-                originalQuantities[i] = quantityArr[i];
+                Console.WriteLine("How many ingrediants do you need for your recipe?");
+                noOfIngrediants = Console.ReadLine();
 
-                while (correctCredentials == false)
+                if (String.IsNullOrEmpty(noOfIngrediants))
+                    Console.WriteLine("Empty input, please enter the correct information.");
+                else if (IsNumber(noOfIngrediants) == true)
                 {
+                    ingrediantCount = Convert.ToInt32(noOfIngrediants);
+                }
+                else if (IsNumber(noOfIngrediants) == false)
+                    Console.WriteLine("Invalid input, please enter the correct information.");
+
+
+                for (int i = 0; i < ingrediantCount; i++)
+                {
+                    while (String.IsNullOrEmpty(ingrediantNameArr[i]))
+                    {
+                        Console.WriteLine($"What is the name for ingrediant");
+                        ingrediantNameArr[i] = Console.ReadLine();
+                        if (String.IsNullOrEmpty(ingrediantNameArr[i]))
+                            Console.WriteLine("Incorrect input, please enter the correct information.");
+                    }
+
+
+                    Console.WriteLine("How much " + ingrediantNameArr[i] + " do you need?");
+                    quantity = Console.ReadLine();
+                    if (String.IsNullOrEmpty(quantity))
+                        Console.WriteLine("Empty input, please enter the correct information.");
+                    else if (IsNumber(quantity) == true)
+                    {
+                        quantityArr[i] = Convert.ToDouble(quantity);
+                        originalQuantities[i] = quantityArr[i];
+                    }
+                    else if (IsNumber(quantity) == false)
+                        Console.WriteLine("Invalid input, please enter the correct information.");
+
                     try
                     {
-                        Console.WriteLine("Please select one of the 3 units of measurement \n1. teaspoons\n2. tablespoons\n3. cups");
+                        Console.WriteLine($"Please select one of the 3 units of measurement for {ingrediantNameArr[i]}: \n1. teaspoons, " +
+                            $"\n2. tablespoons \n3. cups");
                         int measurementChoice = Convert.ToInt32(Console.ReadLine());
                         switch (measurementChoice)
                         {
@@ -61,7 +88,7 @@ namespace ST10058057_PROG6221_PortfolioOfEvidencePart1
                                 correctCredentials = true;
                                 break;
                             default:
-                                Console.WriteLine("I'm sorry, but the option you have selected is not avaliable, please select a valid option");
+                                Console.WriteLine("That option is not avaliable, please enter a valid option");
                                 break;
                         }
                     }
@@ -69,37 +96,63 @@ namespace ST10058057_PROG6221_PortfolioOfEvidencePart1
                     {
                         Console.WriteLine(e.Message);
                     }
+
                 }
             }
-
-            Console.WriteLine("How many steps are required to make this recipe");
-            stepCount = Convert.ToInt32(Console.ReadLine());
-            Steps(stepCount);
-            DisplayRecipe();
-            new RecipeMenu();
-        }
-
-        public static int Steps(int noOfSteps)
-        {
-            for (int i = 0; i < noOfSteps; i++)
+            if (correctCredentials == true)
             {
-                Console.WriteLine($"Enter the description for step {i + 1} ");
-                stepsArr[i] = Console.ReadLine();
-                Console.WriteLine();
+                Steps();
+                DisplayRecipe();
+                new RecipeMenu();
             }
 
+            Console.ReadLine();
+        }
+
+        public static int Steps()
+        {
+            int noOfSteps = 0;
+            bool validStepCount = false;
+            string steps = "";
+            while (validStepCount == false)
+            {
+                Console.WriteLine("How many steps are required to complete the recipe?");
+                steps = Console.ReadLine();
+                if (String.IsNullOrEmpty(steps))
+                    Console.WriteLine("Empty input, please enter the correct information.");
+                else if (IsNumber(steps) == true)
+                {
+                    noOfSteps = Convert.ToInt32(steps);
+                    validStepCount = true;
+                }
+                else if (IsNumber(steps) == false)
+                    Console.WriteLine("Invalid input, please enter the correct information.");
+            }
+
+            for (int i = 0; i < noOfSteps; i++)
+            {
+                while (String.IsNullOrEmpty(stepsArr[i]))
+                {
+                    Console.WriteLine($"Enter the description for step {i + 1} ");
+                    stepsArr[i] = Console.ReadLine();
+                    if (String.IsNullOrEmpty(stepsArr[i]))
+                        Console.WriteLine("Empty Input, please enter the step description");
+                    Console.WriteLine();
+                }
+            }
             return noOfSteps;
         }
+
+
 
         public static void DisplayRecipe()
         {
             Console.ForegroundColor = ConsoleColor.Cyan;
             int stepIndex = 1;
-            Console.WriteLine("Recipe: {0}", recipe + "\n");
             Console.WriteLine("Ingrediants:");
-            for (int i = 0; i < ingNameArr.Length; i++)
-                if (ingNameArr[i] != null)
-                    Console.WriteLine("Name: " + ingNameArr[i] + "\tQuantity: " + quantityArr[i] + " " + measurementArr[i]);
+            for (int i = 0; i < ingrediantNameArr.Length; i++)
+                if (ingrediantNameArr[i] != null)
+                    Console.WriteLine("Name: " + ingrediantNameArr[i] + "\tQuantity: " + quantityArr[i] + " " + measurementArr[i]);
 
 
             Console.WriteLine("\nSteps:");
@@ -115,47 +168,100 @@ namespace ST10058057_PROG6221_PortfolioOfEvidencePart1
             bool validScaleOption = false;
             double scale;
             Console.ForegroundColor = ConsoleColor.Yellow;
-            while (validScaleOption == false)
+            if (ExistingArray() == false)
             {
-                try
+                while (validScaleOption == false)
                 {
-                    Console.WriteLine("Would you like to scale your recipe by 0.5, 2 or 3");
-                    scale = Convert.ToDouble(Console.ReadLine());
-                    switch (scale)
+                    try
                     {
-                        case 0.5:
-                            for (int i = 0; i < quantityArr.Length; i++)
-                                quantityArr[i] *= scale;
-                            validScaleOption = true;
-                            break;
-                        case 2:
-                            for (int i = 0; i < quantityArr.Length; i++)
-                                quantityArr[i] *= scale;
-                            validScaleOption = true;
-                            break;
-                        case 3:
-                            for (int i = 0; i < quantityArr.Length; i++)
-                                quantityArr[i] *= scale;
-                            validScaleOption = true;
-                            break;
-                        default:
-                            Console.WriteLine("Scaling option not avaliable, please select a valid option");
-                            break;
+                        Console.WriteLine("Would you like to scale your recipe by 0.5, 2 or 3");
+                        scale = Convert.ToDouble(Console.ReadLine());
+                        switch (scale)
+                        {
+                            case 0.5:
+                                for (int i = 0; i < quantityArr.Length; i++)
+                                    quantityArr[i] *= scale;
+                                validScaleOption = true;
+                                break;
+                            case 2:
+                                for (int i = 0; i < quantityArr.Length; i++)
+                                    quantityArr[i] *= scale;
+                                validScaleOption = true;
+                                break;
+                            case 3:
+                                for (int i = 0; i < quantityArr.Length; i++)
+                                    quantityArr[i] *= scale;
+                                validScaleOption = true;
+                                break;
+                            default:
+                                Console.WriteLine("Scaling option not avaliable, please select a valid option");
+                                break;
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e.Message);
                     }
                 }
-                catch (Exception e)
+                RecipeConversion();
+                DisplayRecipe();
+                new RecipeMenu();
+            }
+            else
+            {
+                bool validOption = false;
+                while (validOption == false)
                 {
-                    Console.WriteLine(e.Message);
+                    Console.WriteLine("No recipe has been entered, would you like to enter a new recipe yes/no");
+                    string newRecipeChoice = Console.ReadLine();
+                    if (newRecipeChoice.Equals("yes"))
+                    {
+                        AddRecipe();
+                        validOption = true;
+                    }
+                    else if (newRecipeChoice.Equals("no"))
+                    {
+                        new RecipeMenu();
+                        validOption = true;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Please answer either yes or no (answer in lower case)");
+                    }
                 }
             }
-            RecipeConversion();
-            DisplayRecipe();
-            new RecipeMenu();
+
         }
+
+        public static bool ExistingArray()
+        {
+            bool arrayExists = false;
+            for (int i = 0; i < ingrediantNameArr.Length; i++)
+            {
+                if (ingrediantNameArr[i] != null)
+                    arrayExists = true;
+                else
+                    arrayExists = false;
+            }
+            return arrayExists;
+        }
+
+        public static bool IsNumber(string value)
+        {
+            bool isNum = false;
+            if ((isNum = int.TryParse(value, out int numValue)) == true)
+                isNum = true;
+            else
+                isNum = false;
+
+            return isNum;
+        }
+
 
         public static void RecipeConversion()
         {
             int remainder;
+            int leftover;
             for (int j = 0; j < quantityArr.Length; j++)
             {
                 if (measurementArr[j] != null)
@@ -197,6 +303,11 @@ namespace ST10058057_PROG6221_PortfolioOfEvidencePart1
                         {
                             quantityArr[j] = (int)quantityArr[j] / 48;
                             measurementArr[j] = "cups and " + remainder + " teaspoons";
+                            leftover = remainder % 3;
+                            if (remainder / 3 == 0 && leftover > 0)
+                            {
+                                measurementArr[j] = "cups, " + remainder + " tablespoons and " + leftover + " teaspoons";
+                            }
                         }
 
                     }
@@ -206,46 +317,66 @@ namespace ST10058057_PROG6221_PortfolioOfEvidencePart1
 
         public static void QuantityReset()
         {
+            bool correctChoice = false;
             Console.ForegroundColor = ConsoleColor.Blue;
-            Console.WriteLine("Would you like to reset your quantities to their original values Yes/No");
-            string reset = Console.ReadLine();
-            if (reset.Equals("Yes"))
+            while (correctChoice == false)
             {
+                Console.WriteLine("Would you like to reset your quantities to their original values yes/no");
+                string reset = Console.ReadLine();
                 for (int i = 0; i < quantityArr.Length; i++)
                 {
-                    quantityArr[i] = originalQuantities[i];
-                    measurementArr[i] = originalMeasurements[i];
+                    if (reset.Equals("yes"))
+                    {
+                        quantityArr[i] = originalQuantities[i];
+                        measurementArr[i] = originalMeasurements[i];
+                        Console.WriteLine("All quantities have been reset");
+                        DisplayRecipe();
+                        new RecipeMenu();
+                        correctChoice = true;
+                    }
+                    else if (reset.Equals("no"))
+                    {
+                        new RecipeMenu();
+                        correctChoice = true;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Please answer yes or no.(lower case please)");
+                    }
                 }
-                DisplayRecipe();
-                new RecipeMenu();
-
-            }
-            else if (reset.Equals("No"))
-            {
-                new RecipeMenu();
             }
         }
 
         public static void ClearRecipe()
         {
+            bool correctClearOption = false;
             Console.ForegroundColor = ConsoleColor.Magenta;
-            Console.WriteLine("Are you sure you would like to clear this recipe Yes/No");
-            string clearAnswer = Console.ReadLine();
-            if (clearAnswer.Equals("Yes"))
+            while (correctClearOption == false)
             {
-                recipe = "";
-                Array.Clear(ingNameArr, 0, ingNameArr.Length);
-                Array.Clear(quantityArr, 0, quantityArr.Length);
-                Array.Clear(measurementArr, 0, measurementArr.Length);
-                Array.Clear(stepsArr, 0, stepsArr.Length);
-                Console.WriteLine("Recipe has been cleared!");
-                DisplayRecipe();
-                new RecipeMenu();
+                Console.WriteLine("Are you sure you would like to clear this recipe yes/no");
+                string clearAnswer = Console.ReadLine();
+                if (clearAnswer.Equals("yes"))
+                {
+                    Array.Clear(ingrediantNameArr, 0, ingrediantNameArr.Length);
+                    Array.Clear(quantityArr, 0, quantityArr.Length);
+                    Array.Clear(measurementArr, 0, measurementArr.Length);
+                    Array.Clear(stepsArr, 0, stepsArr.Length);
+                    Console.WriteLine("Recipe has been cleared!");
+                    AddRecipe();
+                    new RecipeMenu();
+                    correctClearOption = true;
+                }
+                else if (clearAnswer.Equals("no"))
+                {
+                    new RecipeMenu();
+                    correctClearOption = true;
+                }
+                else
+                {
+                    Console.WriteLine("Please enter either yes or no");
+                }
             }
-            else if (clearAnswer.Equals("No"))
-            {
-                new RecipeMenu();
-            }
+            DisplayRecipe();
         }
     }
     class RecipeMenu
@@ -263,7 +394,7 @@ namespace ST10058057_PROG6221_PortfolioOfEvidencePart1
                     while (optionSelected == false)
                     {
                         Console.WriteLine("Please select one of the following options: \n1. " +
-                        "Increase quantity scale \n2. Clear recipe list \n3. Quantity Reset \n4. Exit Application");
+                        "Increase quantity scale \n2. Quantity reset \n3. Clear recipe \n4. Exit Application");
                         selectedOption = Convert.ToInt32(Console.ReadLine());
 
                         option = "" + selectedOption;
@@ -274,11 +405,11 @@ namespace ST10058057_PROG6221_PortfolioOfEvidencePart1
                                 optionSelected = true;
                                 break;
                             case 2:
-                                Ingrediants.ClearRecipe();
+                                Ingrediants.QuantityReset();
                                 optionSelected = true;
                                 break;
                             case 3:
-                                Ingrediants.QuantityReset();
+                                Ingrediants.ClearRecipe();
                                 optionSelected = true;
                                 break;
                             case 4:
