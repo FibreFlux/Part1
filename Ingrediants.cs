@@ -308,7 +308,7 @@ namespace ST10058057_PROG6221_PortfolioOfEvidencePart1
                     {
                         if (quantityArr[i] % 16 == 0 && quantityArr[i] >= 16)   //Checks if the quantity entered is divisible by 16 and is bigger than or equal to 16
                         {
-                            quantityArr[i] = (int)quantityArr[i] / 16;
+                            quantityArr[i] = (int)quantityArr[i] / 16; //Converts tablespoons to tablespoons (1 cup = 16 tablespoons)
                             measurementArr[i] = "cups";
                         }
                         else if (quantityArr[i] % 16 != 0 && quantityArr[i] >= 16)  //Checks if the quantity entered is divisible by 16 and is bigger than or equal to 16
@@ -322,7 +322,7 @@ namespace ST10058057_PROG6221_PortfolioOfEvidencePart1
                     {
                         if (quantityArr[i] % 3 == 0 && quantityArr[i] < 48)   //Checks if the quantity entered is divisible by 3 and is less than 48
                         {
-                            quantityArr[i] = (int)quantityArr[i] / 3; //Converts teaspoons to tablespoons
+                            quantityArr[i] = (int)quantityArr[i] / 3; //Converts teaspoons to tablespoons (1 tablespoon = 3 teaspoons)
                             measurementArr[i] = "tablespoons";
                         }
                         else if (quantityArr[i] % 3 != 0 && quantityArr[i] < 48) //Checks if the quantity entered is not divisible by 3 and is less than 48
@@ -333,7 +333,7 @@ namespace ST10058057_PROG6221_PortfolioOfEvidencePart1
                         }
                         else if (quantityArr[i] >= 48 && quantityArr[i] % 48 == 0) //Checks if the quantity entered is divisible by 48 and is more than 48
                         {
-                            quantityArr[i] = (int)quantityArr[i] / 48; //converts teaspoons to cups
+                            quantityArr[i] = (int)quantityArr[i] / 48; //converts teaspoons to cups (1 cup = 48 teaspoons)
                             measurementArr[i] = "cups";
                         }
                         else if (quantityArr[i] > 48 && quantityArr[i] % 48 != 0) //Checks if the quantity entered is not divisible by 48 and is more than 48
