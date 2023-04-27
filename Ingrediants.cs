@@ -178,7 +178,7 @@ namespace ST10058057_PROG6221_PortfolioOfEvidencePart1
             for (int i = 0; i < ingrediantNameArr.Length; i++)
                 if (ingrediantNameArr[i] != null)   //Checks if the "ingrediantNameArr" array is not null
                 {
-                    Console.WriteLine("Name: " + ingrediantNameArr[i] + "\tQuantity: " + quantityArr[i] + " " + measurementArr[i]);
+                    Console.WriteLine("Name: " + ingrediantNameArr[i] + "\t\tQuantity: " + quantityArr[i] + " " + measurementArr[i]);
                 }
             Console.WriteLine("\nSteps:");
             foreach (var steps in stepsArr) //For each loop used to display the steps entered
@@ -306,49 +306,49 @@ namespace ST10058057_PROG6221_PortfolioOfEvidencePart1
                 {
                     if (measurementArr[i].Equals("tablespoons"))
                     {
-                        if (quantityArr[i] % 16 == 0)   //Checks if the quantity entered is divisible by 16
+                        if (quantityArr[i] % 16 == 0 && quantityArr[i] >= 16)   //Checks if the quantity entered is divisible by 16 and is bigger than or equal to 16
                         {
-                            quantityArr[i] /= (int)quantityArr[i] / 16;
+                            quantityArr[i] = (int)quantityArr[i] / 16;
                             measurementArr[i] = "cups";
                         }
-                        else
+                        else if (quantityArr[i] % 16 != 0 && quantityArr[i] >= 16)  //Checks if the quantity entered is divisible by 16 and is bigger than or equal to 16
                         {
                             leftoverTableSpoons = (int)quantityArr[i] % 16;
                             quantityArr[i] = (int)quantityArr[i] / 16;
-                            measurementArr[i] = measurementArr[i] + " and " + leftoverTableSpoons + " tablespoons";
+                            measurementArr[i] = "cups and " + leftoverTableSpoons + " tablespoons";
                         }
                     }
                     else if (measurementArr[i].Equals("teaspoons"))
                     {
                         if (quantityArr[i] % 3 == 0 && quantityArr[i] < 48)   //Checks if the quantity entered is divisible by 3 and is less than 48
                         {
-                            quantityArr[i] = (int)quantityArr[i] / 3;
+                            quantityArr[i] = (int)quantityArr[i] / 3; //Converts teaspoons to tablespoons
                             measurementArr[i] = "tablespoons";
                         }
                         else if (quantityArr[i] % 3 != 0 && quantityArr[i] < 48) //Checks if the quantity entered is not divisible by 3 and is less than 48
                         {
-                            leftoverTeaSpoons = (int)quantityArr[i] % 3;
-                            quantityArr[i] = (int)quantityArr[i] / 3;
+                            leftoverTeaSpoons = (int)quantityArr[i] % 3; //finds the leftover teaspoons
+                            quantityArr[i] = (int)quantityArr[i] / 3; 
                             measurementArr[i] = "tablespoons " + leftoverTeaSpoons + " teaspoons";
                         }
                         else if (quantityArr[i] >= 48 && quantityArr[i] % 48 == 0) //Checks if the quantity entered is divisible by 48 and is more than 48
                         {
-                            quantityArr[i] = (int)quantityArr[i] / 48;
+                            quantityArr[i] = (int)quantityArr[i] / 48; //converts teaspoons to cups
                             measurementArr[i] = "cups";
                         }
                         else if (quantityArr[i] > 48 && quantityArr[i] % 48 != 0) //Checks if the quantity entered is not divisible by 48 and is more than 48
                         {
                             leftoverTeaSpoons = (int)quantityArr[i] % 48;
-                            quantityArr[i] = (int)quantityArr[i] / 48;
+                            quantityArr[i] = (int)quantityArr[i] / 48; 
                             measurementArr[i] = "cups and " + leftoverTeaSpoons + " teaspoons";
-                            if (leftoverTeaSpoons % 3 == 0) //Checks if the tablespoons are divisible by 3
+                            if (leftoverTeaSpoons % 3 == 0)         //Checks if the number of teaspoons are divisible by 3
                             {
-                                leftoverTeaSpoons /= 3;
-                                measurementArr[i] = "cups and " + leftoverTeaSpoons + " tablespoons";
+                                leftoverTableSpoons = leftoverTeaSpoons / 3; //converts teaspoons to tablespoons
+                                measurementArr[i] = "cups and " + leftoverTableSpoons + " tablespoons";
                             }
                             else {
-                                leftoverTableSpoons = leftoverTeaSpoons / 3;
-                                leftoverTeaSpoons %= 3;
+                                leftoverTableSpoons = leftoverTeaSpoons / 3; //converts teaspoons to tablespoons
+                                leftoverTeaSpoons %= 3; //finds the remaining teaspoons
                                 measurementArr[i] = "cups, " + leftoverTableSpoons + " tablespoons and " + leftoverTeaSpoons + " teaspoons ";
                             }
 
